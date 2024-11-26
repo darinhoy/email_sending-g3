@@ -30,8 +30,6 @@ def select_excel_file():
     if filepath:
         excel_file_path = filepath
         excel_file_label.config(text=f"File Selected: {filepath}")
-
-# Open Calendar to Select Date
 def open_calendar():
     global selected_date
 
@@ -48,19 +46,13 @@ def open_calendar():
     calendar.pack(pady=20)
 
     Button(calendar_window, text="Select", command=select_date).pack(pady=30)
-
 # Bulk Email Sending Function
 def send_bulk_emails():
     sender_email = sender_entry.get()
     sender_password = password_entry.get()
-    recipient_email = recipient_entry.get()  # Get recipient email
 
     if not excel_file_path:
         messagebox.showerror("Error", "No Excel file selected!")
-        return
-
-    if not recipient_email:  # Check if recipient email is empty
-        messagebox.showerror("Error", "Recipient email is required!")
         return
 
     try:
@@ -77,6 +69,7 @@ def send_bulk_emails():
 
             for _, row in df.iterrows():
                 recipient_name = row['Name']
+                recipient_email = row['Email']
                 due_date = row['DueDate']
                 invoice_no = row['invioce_no']
                 amount = row['amount']
@@ -84,7 +77,7 @@ def send_bulk_emails():
 
                 msg = MIMEMultipart()
                 msg['From'] = sender_email
-                msg['To'] = recipient_email  # Send to the entered recipient email
+                msg['To'] = recipient_email
                 msg['Subject'] = f"Information about price trips {recipient_name}"
 
                 body = f"""
@@ -161,15 +154,15 @@ Label(main_frame, text="Password:", font=font_config, bg="lightblue").grid(row=2
 password_entry = Entry(main_frame, width=40, show="*", font=font_config, bd=1, relief="solid")
 password_entry.grid(row=2, column=1, padx=15, pady=13)
 
-# Recipient Email
-Label(main_frame, text="Recipient Email:", font=font_config, bg="lightblue").grid(row=3, column=0, padx=10, pady=5, sticky="w")
-recipient_entry = Entry(main_frame, width=40, font=font_config, bd=1, relief="solid")
-recipient_entry.grid(row=3, column=1, padx=10, pady=5)
-
 # Subject
-Label(main_frame, text="Subject:", font=font_config, bg="lightblue").grid(row=4, column=0, padx=10, pady=5, sticky="w")
+Label(main_frame, text="Subject:", font=font_config, bg="lightblue").grid(row=3, column=0, padx=10, pady=5, sticky="w")
 subject_entry = Entry(main_frame, width=40, font=font_config, bd=1, relief="solid")
-subject_entry.grid(row=4, column=1, padx=10, pady=5)
+subject_entry.grid(row=3, column=1, padx=10, pady=5)
+
+# Email Body
+# Label(main_frame, text="Email Body (HTML):", font=font_config, bg="lightblue").grid(row=4, column=0, padx=10, pady=5, sticky="w")
+# email_body = Text(main_frame, width=60, height=10, font=font_config, bd=2, relief="solid")
+# email_body.grid(row=4, column=1, padx=10, pady=5)
 
 # Attachment
 Label(main_frame, text="Attachment:", font=font_config, bg="lightblue").grid(row=5, column=0, padx=10, pady=5, sticky="w")
@@ -185,9 +178,10 @@ Button(main_frame, text="Browse", command=select_excel_file, font=font_config, b
 
 # Schedule Date and Time
 Label(main_frame, text="Schedule Date (YYYY-MM-DD):", font=font_config, bg="lightblue").grid(row=8, column=0, padx=10, pady=5, sticky="w")
-schedule_date_entry = Entry(main_frame, width=25, font=font_config, bd=1, relief="solid")
+schedule_date_entry = Entry(main_frame, width=25, font=font_config,bd=1, relief="solid")
 schedule_date_entry.grid(row=8, column=1, padx=10, pady=5)
 Button(main_frame, text="Select Date", command=open_calendar, bg="#4CAF50", fg="white").grid(row=8, column=2, padx=10, pady=5)
+
 
 Label(main_frame, text="Schedule Time (HH:MM):", font=font_config, bg="lightblue").grid(row=9, column=0, padx=10, pady=5, sticky="w")
 schedule_time_entry = Entry(main_frame, width=25, font=font_config, bd=1, relief="solid")
@@ -195,5 +189,7 @@ schedule_time_entry.grid(row=9, column=1, padx=10, pady=5)
 
 # Buttons for Sending Emails
 Button(main_frame, text="Send Emails", command=send_bulk_emails, bg="#007BFF", fg="white", font=font_config, width=20).grid(row=10, column=0, pady=10, columnspan=3)
+
+# Update
 
 root.mainloop()
