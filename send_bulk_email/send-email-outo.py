@@ -1,6 +1,5 @@
 import smtplib
-from tkinter import Tk, Label, Entry, Text, Button, filedialog, messagebox, Frame, Toplevel
-from tkcalendar import Calendar
+from tkinter import Tk, Label, Entry, Text, Button, filedialog, messagebox, Frame
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import pandas as pd
@@ -30,22 +29,7 @@ def select_excel_file():
     if filepath:
         excel_file_path = filepath
         excel_file_label.config(text=f"File Selected: {filepath}")
-def open_calendar():
-    global selected_date
 
-    def select_date():
-        global selected_date
-        selected_date = calendar.get_date()
-        schedule_date_entry.delete(0, "end")
-        schedule_date_entry.insert(0, selected_date)
-        calendar_window.destroy()
-
-    calendar_window = Toplevel(root)
-    calendar_window.title("Select Date")
-    calendar = Calendar(calendar_window, date_pattern="yyyy-mm-dd")
-    calendar.pack(pady=20)
-
-    Button(calendar_window, text="Select", command=select_date).pack(pady=30)
 # Bulk Email Sending Function
 def send_bulk_emails():
     sender_email = sender_entry.get()
@@ -106,19 +90,7 @@ def run_schedule():
     while True:
         schedule.run_pending()
         time.sleep(1)
-
-# Schedule Email Function
-def schedule_emails():
-    schedule_date = schedule_date_entry.get()
-    schedule_time = schedule_time_entry.get()
-    schedule_datetime_str = f"{schedule_date} {schedule_time}"
-    schedule_datetime = datetime.strptime(schedule_datetime_str, "%Y-%m-%d %H:%M")
-
-    schedule.every().day.at(schedule_time).do(send_bulk_emails)
-    messagebox.showinfo("Scheduled", f"Bulk emails scheduled for {schedule_datetime}")
-
-    threading.Thread(target=run_schedule, daemon=True).start()
-
+        
 # Create GUI
 root = Tk()
 root.title("Email Automation System")
@@ -152,7 +124,7 @@ sender_entry.grid(row=1, column=1, padx=10, pady=5)
 # Sender Password
 Label(main_frame, text="Password:", font=font_config, bg="lightblue").grid(row=2, column=0, padx=10, pady=5, sticky="w")
 password_entry = Entry(main_frame, width=40, show="*", font=font_config, bd=1, relief="solid")
-password_entry.grid(row=2, column=1, padx=15, pady=13)
+password_entry.grid(row=2, column=1, padx=10, pady=5)
 
 # Subject
 Label(main_frame, text="Subject:", font=font_config, bg="lightblue").grid(row=3, column=0, padx=10, pady=5, sticky="w")
@@ -166,30 +138,17 @@ subject_entry.grid(row=3, column=1, padx=10, pady=5)
 
 # Attachment
 Label(main_frame, text="Attachment:", font=font_config, bg="lightblue").grid(row=5, column=0, padx=10, pady=5, sticky="w")
-attachment_label = Label(main_frame, text="No file selected", width=40, anchor="w", font=font_config, bg="white")
+attachment_label = Label(main_frame, text="No file selected", width=40, anchor="w", font=font_config, bg="lightblue")
 attachment_label.grid(row=5, column=1, padx=10, pady=5)
 Button(main_frame, text="Browse", command=select_attachment, font=font_config, bg="#4CAF50", fg="white").grid(row=5, column=2, padx=10, pady=5)
 
 # Excel File Selection
 Label(main_frame, text="Excel File:", font=font_config, bg="lightblue").grid(row=6, column=0, padx=10, pady=5, sticky="w")
-excel_file_label = Label(main_frame, text="No file selected", width=40, anchor="w", font=font_config, bg="white")
+excel_file_label = Label(main_frame, text="No file selected", width=40, anchor="w", font=font_config, bg="lightblue")
 excel_file_label.grid(row=6, column=1, padx=10, pady=5)
 Button(main_frame, text="Browse", command=select_excel_file, font=font_config, bg="#4CAF50", fg="white").grid(row=6, column=2, padx=10, pady=5)
 
-# Schedule Date and Time
-Label(main_frame, text="Schedule Date (YYYY-MM-DD):", font=font_config, bg="lightblue").grid(row=8, column=0, padx=10, pady=5, sticky="w")
-schedule_date_entry = Entry(main_frame, width=25, font=font_config,bd=1, relief="solid")
-schedule_date_entry.grid(row=8, column=1, padx=10, pady=5)
-Button(main_frame, text="Select Date", command=open_calendar, bg="#4CAF50", fg="white").grid(row=8, column=2, padx=10, pady=5)
-
-
-Label(main_frame, text="Schedule Time (HH:MM):", font=font_config, bg="lightblue").grid(row=9, column=0, padx=10, pady=5, sticky="w")
-schedule_time_entry = Entry(main_frame, width=25, font=font_config, bd=1, relief="solid")
-schedule_time_entry.grid(row=9, column=1, padx=10, pady=5)
-
 # Buttons for Sending Emails
-Button(main_frame, text="Send Emails", command=send_bulk_emails, bg="#007BFF", fg="white", font=font_config, width=20).grid(row=10, column=0, pady=10, columnspan=3)
-
-# Update
+Button(main_frame, text="Send Emails", command=send_bulk_emails, bg="#007BFF", fg="white", font=font_config, width=20).grid(row=9, column=0, pady=10, columnspan=3)
 
 root.mainloop()
