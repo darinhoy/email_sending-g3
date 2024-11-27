@@ -3,12 +3,10 @@ from tkinter import Tk, Label, Entry, Text, Button, filedialog, messagebox, Fram
 from tkcalendar import Calendar
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-import pandas as pd
-import time
-from pathlib import Path
 import threading
 import schedule
 from datetime import datetime
+import time
 
 # SMTP Configuration
 SMTP_SERVER = 'smtp.gmail.com'
@@ -20,6 +18,7 @@ def send_single_email():
     sender_password = password_entry.get()
     recipient_email = recipient_entry.get()  # Get recipient email
     subject = subject_entry.get()  # Get subject
+    message_body = message_text.get("1.0", "end").strip()  # Get message body from Text widget
 
     if not recipient_email:
         messagebox.showerror("Error", "Recipient email is required!")
@@ -36,8 +35,10 @@ def send_single_email():
             msg['To'] = recipient_email
             msg['Subject'] = subject
 
-            # Attach an empty body or default message if desired
-            msg.attach(MIMEText('No message body provided.', 'plain'))
+            # Attach the message body
+            if not message_body:
+                message_body = "No message body provided."  # Default text if the message box is empty
+            msg.attach(MIMEText(message_body, 'plain'))
 
             # Send the email
             server.send_message(msg)
@@ -46,7 +47,8 @@ def send_single_email():
         messagebox.showinfo("Success", "Email sent successfully!")
     except Exception as e:
         messagebox.showerror("Error", f"Failed to send email: {e}")
-#open Calendar
+
+# Open calendar
 def open_calendar():
     global selected_date
 
@@ -63,6 +65,7 @@ def open_calendar():
     calendar.pack(pady=20)
 
     Button(calendar_window, text="Select", command=select_date).pack(pady=30)
+
 # Function to schedule the email
 def schedule_email():
     schedule_date = schedule_date_entry.get()
@@ -117,6 +120,7 @@ root.geometry(f"{window_width}x{window_height}+{x_coordinate}+{y_coordinate}")
 main_frame = Frame(root, padx=20, pady=20, bg="lightblue")
 main_frame.place(relx=0.5, rely=0.5, anchor="center")
 
+
 # Title Label
 title_font = ("Arial", 24, "bold")
 font_config = ("Arial", 13)
@@ -142,15 +146,18 @@ recipient_entry.grid(row=3, column=1, padx=10, pady=5)
 Label(main_frame, text="Subject:", font=font_config, bg="lightblue").grid(row=4, column=0, padx=10, pady=5, sticky="w")
 subject_entry = Entry(main_frame, width=40, font=font_config, bd=1, relief="solid")
 subject_entry.grid(row=4, column=1, padx=10, pady=5)
+
 # Message Body
 Label(main_frame, text="Message:", font=font_config, bg="lightblue").grid(row=5, column=0, padx=10, pady=5, sticky="w")
 message_text = Text(main_frame, height=5, width=40, font=font_config)
 message_text.grid(row=5, column=1, padx=10, pady=5)
-# Schedule Date 
+
+# Schedule Date
 Label(main_frame, text="Schedule Date (YYYY-MM-DD):", font=font_config, bg="lightblue").grid(row=6, column=0, padx=10, pady=5, sticky="w")
 schedule_date_entry = Entry(main_frame, width=25, font=font_config, bd=1, relief="solid")
 schedule_date_entry.grid(row=6, column=1, padx=10, pady=5)
 Button(main_frame, text="Select Date", command=open_calendar, bg="#4CAF50", fg="white").grid(row=6, column=2, padx=10, pady=5)
+
 # Schedule Time
 Label(main_frame, text="Schedule Time (HH:MM):", font=font_config, bg="lightblue").grid(row=7, column=0, padx=10, pady=5, sticky="w")
 schedule_time_entry = Entry(main_frame, width=25, font=font_config, bd=1, relief="solid")
