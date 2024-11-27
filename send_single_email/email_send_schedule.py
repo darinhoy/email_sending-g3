@@ -49,7 +49,6 @@ def send_single_email():
 #open Calendar
 def open_calendar():
     global selected_date
-
     def select_date():
         global selected_date
         selected_date = calendar.get_date()
