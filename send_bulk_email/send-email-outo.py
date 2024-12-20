@@ -131,10 +131,6 @@ Label(main_frame, text="Subject:", font=font_config, bg="lightblue").grid(row=3,
 subject_entry = Entry(main_frame, width=40, font=font_config, bd=1, relief="solid")
 subject_entry.grid(row=3, column=1, padx=10, pady=5)
 
-# Email Body
-# Label(main_frame, text="Email Body (HTML):", font=font_config, bg="lightblue").grid(row=4, column=0, padx=10, pady=5, sticky="w")
-# email_body = Text(main_frame, width=60, height=10, font=font_config, bd=2, relief="solid")
-# email_body.grid(row=4, column=1, padx=10, pady=5)
 
 # Attachment
 Label(main_frame, text="Attachment:", font=font_config, bg="lightblue").grid(row=5, column=0, padx=10, pady=5, sticky="w")
