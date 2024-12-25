@@ -124,7 +124,7 @@ main_frame.place(relx=0.5, rely=0.5, anchor="center")
 title_font = ("Arial", 24, "bold")
 font_config = ("Arial", 13)
 
-Label(main_frame, text="Single Email Sending System with Scheduling", font=title_font, bg="lightblue").grid(row=0, column=0, columnspan=3, pady=20)
+Label(main_frame, text="Email Sending Automation System", font=title_font, bg="lightblue").grid(row=0, column=0, columnspan=3, pady=20)
 
 # Sender Email
 Label(main_frame, text="Sender Email:", font=font_config, bg="lightblue").grid(row=1, column=0, padx=10, pady=5, sticky="w")
